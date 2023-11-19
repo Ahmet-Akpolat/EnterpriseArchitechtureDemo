@@ -1,6 +1,8 @@
-﻿using Business.Concrete;
+﻿using System.ComponentModel.Design;
+using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
+using Entities.Concrete;
 
 namespace ConsoleUI
 {
@@ -15,18 +17,56 @@ namespace ConsoleUI
             //    Console.WriteLine(product.ProductName);
             //}
 
-            ProductManager productManager = new ProductManager(new EfProductDal());
+            ProductTest2();
+            //Console.WriteLine("#############################");
+            //ProductTest();
+            //Console.WriteLine("#############################");
+            //CategoryTest();
 
-            foreach (var product in productManager.GetAll())
+
+
+            void ProductTest()
             {
-                Console.WriteLine(product.ProductName);
+                ProductManager productManager = new ProductManager(new EfProductDal());
+
+                foreach (var product in productManager.GetByUnitPrice(50, 300).Data.OrderBy(product => product.UnitPrice))
+                {
+                    Console.WriteLine("Product Name : " + product.ProductName + " Price : " + product.UnitPrice);
+                }
             }
 
-            Console.WriteLine("#############################");
-
-            foreach (var product in productManager.GetByUnitPrice(50,300).OrderBy(product => product.UnitPrice))
+            void ProductTest2()
             {
-                Console.WriteLine("Product Name : " + product.ProductName + " Price : " + product.UnitPrice);
+                ProductManager productManager = new ProductManager(new EfProductDal());
+
+                var result = productManager.GetProductDetail();
+
+                if (result.IsSuccess)
+                {
+                    foreach (var product in result.Data)
+                    {
+                        Console.WriteLine(product.ProductName + " / " + product.CategoryName);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(result.Message);
+                }
+
+                
+            }
+
+            void CategoryTest()
+            {
+                CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
+
+                foreach (var category in categoryManager.GetAll())
+                {
+                    Console.WriteLine(category.CategoryName);
+                }
+
+
+                Console.WriteLine(categoryManager.GetById(4).CategoryName);
             }
         }
     }
