@@ -1,7 +1,4 @@
 ﻿using Business.Abstract;
-using Business.Concrete;
-using Core.Utilities.Results.Abstract;
-using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController] // ATRIBUTE
+    [ApiController]
     public class ProductsController : ControllerBase
     {
         IProductService _productService;
@@ -28,7 +25,7 @@ namespace WebAPI.Controllers
             {
                 return Ok(result);
             }
-                return BadRequest(result);
+            return BadRequest(result);
         }
 
         [HttpGet("getbyid")]

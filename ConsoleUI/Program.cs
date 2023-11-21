@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.Design;
+using Business.Abstract;
+using System.Runtime.InteropServices;
 using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
