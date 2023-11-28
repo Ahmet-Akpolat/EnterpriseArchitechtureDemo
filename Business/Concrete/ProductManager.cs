@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Business.Constanst;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -13,6 +16,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 
 namespace Business.Concrete
 {
@@ -32,7 +36,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceError);
             }
 
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
         }
 
         public IDataResult<List<Product>> GetAllByCategoryId(int categoryId)
@@ -55,17 +59,15 @@ namespace Business.Concrete
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
+
+        // Validation
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            if (product.ProductName.Length < 3)
-            {
-                return new ErrorResult(Messages.ProductNameError);
-            }
-            else
-            {
-                _productDal.Add(product);
-                return new SuccessResult(Messages.ProductAdded);
-            }
+
+            // Business Codes
+            _productDal.Add(product);
+            return new SuccessResult(Messages.ProductAdded);
         }
     }
 }
